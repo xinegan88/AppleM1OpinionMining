@@ -18,3 +18,4 @@ In order to determine if users felt that the M1 chip was living up to Apple’s 
 	* Make generalizations regarding each category.
 
 ### Data Pipeline
+In order to collect the data, I ran my script at various times each day, and saved each data pull from the API with a time stamp, then periodically pulled batches of the raw data.
