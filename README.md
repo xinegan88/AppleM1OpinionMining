@@ -25,9 +25,12 @@ In order to collect the data, I ran my script at various times each day, and sav
 
 ### Exploratory Data Analysis
 #### Positive Reception
-![DataClasses](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/class_frequency.png)
-* Over half of all observations (approx. 1200/2100) were labled as positive. Nearly 600 more were neutral, and around 300 were classified as negative.  
-* Analysis of the POS (part of speech tags) for each class indicated that neutral observations seemed to contain foriegn words -- which is unlike the other two classes. This might suggest that not all of these observations are actually neutral, but the unknown word effected the score. Further investigation into these neutral observations might reveal misclassification, and could contradict the class imbalance we observe in this data.
+![DataClasses](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/class_frequencies.png)
+ Positive Class (1.0): 6322
+ Neutral Class (0.0): 5696
+ Negative Class (-1.0): 1628
+ 
+ It is a little suspicious that the neutral class is so large. However, out of all three classes, the neutral class had the most instances of foreign words. It could be that the foreign words are causing a mislabeling. This could mean that the class imbalance may be more or less pronounced, depending on the sentiment of the foriegn words. 
 
 #### Negative Opinions
 Among the negative comments we observe frequent instances of the words "air", "pro", "iphone", and "ipad". This suggests that there is some link between these products and user dissatisfaction. Since one of Apple's main claims was that the M1 would foster compatibility among other products in the Apple Universe, including allowing iPhone and iPad apps to run natively on the machine, it would be worth further investigation to determine if users think that the M1 is living up to these claims. 
@@ -38,10 +41,12 @@ Among the negative comments we observe frequent instances of the words "air", "p
 2. Support Vector Classifier
 
 ### Recommendations
-* Collect more data regarding the customer's perception of compatibility among other products in the Apple universe.
+* Collect more data regarding the customer's perception of compatibility among other products in the Apple universe. Work towards increased compatibility in later updates and releases.
+* Develop methods to deal with foriegn words when collecting social media data.
+* Capitialize on opportunities to highlight performance by reaching out to users with positive experiences and asking them about specific performance benchmarks. Expand efforts to learn more about user perception of performance.
+
 
 ### Future Work
-* Develop methods to deal with foriegn words when collection social media data.
 * Expand application to access data from additional platforms.
 * Take advantage of time data to provide insights into user opinions over time.
 * Stream data to a dashboard to analyze and update changing opinions in realtime.
