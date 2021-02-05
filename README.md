@@ -1,6 +1,7 @@
 # Social Media Sentiment Analysis Engine
 
 ### Navigate this Repository
+
 ![github_directory](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/githib_directory.png)
 
 ## What do users think about the Apple M1 chip?
