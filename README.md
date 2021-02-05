@@ -25,7 +25,7 @@ In order to collect the data, I ran my script at various times each day, and sav
 
 ### Exploratory Data Analysis
 #### Positive Reception
-![DataClasses](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/classes.png)
+![DataClasses](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/classe_frequency.png)
 * Over half of all observations (approx. 1200/2100) were labled as positive. Nearly 600 more were neutral, and around 300 were classified as negative.  
 * Analysis of the POS (part of speech tags) for each class indicated that neutral observations seemed to contain foriegn words -- which is unlike the other two classes. This might suggest that not all of these observations are actually neutral, but the unknown word effected the score. Further investigation into these neutral observations might reveal misclassification, and could contradict the class imbalance we observe in this data.
 
