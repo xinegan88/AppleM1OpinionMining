@@ -19,3 +19,9 @@ In order to determine if users felt that the M1 chip was living up to Apple’s 
 
 ### Data Pipeline
 In order to collect the data, I ran my script at various times each day, and saved each data pull from the API with a time stamp, then periodically pulled batches of the raw data.
+
+![DataPipeline](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/DataPipeline.png.001.png)
+
+### Models
+
+
