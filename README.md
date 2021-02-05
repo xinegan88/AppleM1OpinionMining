@@ -31,7 +31,6 @@ In order to collect the data, I ran my script at various times each day, and sav
 
 #### Negative Opinions
 Among the negative comments we observe frequent instances of the words "air", "pro", "iphone", and "ipad". This suggests that there is some link between these products and user dissatisfaction. Since one of Apple's main claims was that the M1 would foster compatibility among other products in the Apple Universe, including allowing iPhone and iPad apps to run natively on the machine, it would be worth further investigation to determine if users think that the M1 is living up to these claims. 
-![NegativeWordCloud](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/neg_word_cloud.png)
 ![NegativeWords](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/neg_words.png)
 
 ### Models
