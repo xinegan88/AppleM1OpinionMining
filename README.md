@@ -1,5 +1,4 @@
 # Social Media Sentiment Analysis Engine
-Download the command line application here.
 
 ### Navigate this Repository
 ![github_directory](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/githib_directory.png)
