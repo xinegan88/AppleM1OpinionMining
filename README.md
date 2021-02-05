@@ -2,30 +2,7 @@
 Download the command line application here.
 
 ### Navigate this Repository
-|-- README.md
-|-- M1Presentation.pdf
-|-- src
-| |-- __init__.py
-| |-- eda_visualizations.py
-| |-- general_functions.py
-| |-- model_functions.py
-| |-- process_data.py
-| |-- reddit_api.py
-| |-- twitter_api.py
-| |-- word_vector_functions.py
-| -- notebooks
-| |-- 2021_01_29_CE_EDA.ipynb
-| |-- 2021_02_01_CE_TestNB_PreprocessData.ipynb
-| |-- 2021_02_01_Models_NB.ipynb
-| |-- 2021_02_01_Models_SVC.ipynb
-| |-- 2021_02_04_CE_TestNB_Reddit.ipynb
-| |-- 2021_02_04_CE_TestNB_Twitter.ipynb
-|-- images
-| |-- data_pipeline.png
-| |-- classes.png
-| |-- neg_word_cloud.png
-| |-- neg_words.png
-
+![github_directory](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/githib_directory.png)
 
 ## What do users think about the Apple M1 chip?
 
