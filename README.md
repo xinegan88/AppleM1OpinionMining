@@ -2,6 +2,30 @@
 Download the command line application here.
 
 ### Navigate this Repository
+|-- README.md
+|-- M1Presentation.pdf
+|-- src
+| |-- __init__.py
+| |-- eda_visualizations.py
+| |-- general_functions.py
+| |-- model_functions.py
+| |-- process_data.py
+| |-- reddit_api.py
+| |-- twitter_api.py
+| |-- word_vector_functions.py
+| -- notebooks
+| |-- 2021_01_29_CE_EDA.ipynb
+| |-- 2021_02_01_CE_TestNB_PreprocessData.ipynb
+| |-- 2021_02_01_Models_NB.ipynb
+| |-- 2021_02_01_Models_SVC.ipynb
+| |-- 2021_02_04_CE_TestNB_Reddit.ipynb
+| |-- 2021_02_04_CE_TestNB_Twitter.ipynb
+|-- images
+| |-- data_pipeline.png
+| |-- classes.png
+| |-- neg_word_cloud.png
+| |-- neg_words.png
+
 
 ## What do users think about the Apple M1 chip?
 
@@ -20,8 +44,28 @@ In order to determine if users felt that the M1 chip was living up to Apple’s 
 ### Data Pipeline
 In order to collect the data, I ran my script at various times each day, and saved each data pull from the API with a time stamp, then periodically pulled batches of the raw data.
 
-![DataPipeline](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/DataPipeline.png.001.png)
+![DataPipeline](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/data_pipeline.png)
+
+### Exploratory Data Analysis
+#### Positive Reception
+![DataClasses](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/classes.png)
+* Over half of all observations (approx. 1200/2100) were labled as positive. Nearly 600 more were neutral, and around 300 were classified as negative.  
+* Analysis of the POS (part of speech tags) for each class indicated that neutral observations seemed to contain foriegn words -- which is unlike the other two classes. This might suggest that not all of these observations are actually neutral, but the unknown word effected the score. Further investigation into these neutral observations might reveal misclassification, and could contradict the class imbalance we observe in this data.
+
+#### Negative Opinions
+Among the negative comments we observe frequent instances of the words "air", "pro", "iphone", and "ipad". This suggests that there is some link between these products and user dissatisfaction. Since one of Apple's main claims was that the M1 would foster compatibility among other products in the Apple Universe, including allowing iPhone and iPad apps to run natively on the machine, it would be worth further investigation to determine if users think that the M1 is living up to these claims. 
+![NegativeWordCloud](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/neg_word_cloud.png)
+![NegativeWords](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/neg_words.png)
 
 ### Models
+1. Niave Bayes
+2. Support Vector Classifier
 
+### Recommendations
+* Collect more data regarding the customer's perception of compatibility among other products in the Apple universe.
 
+### Future Work
+* Develop methods to deal with foriegn words when collection social media data.
+* Expand application to access data from additional platforms.
+* Take advantage of time data to provide insights into user opinions over time.
+* Stream data to a dashboard to analyze and update changing opinions in realtime.
