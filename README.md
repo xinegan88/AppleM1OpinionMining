@@ -21,11 +21,12 @@ In order to determine if users felt that the M1 chip was living up to Apple’s 
 ### Data Pipeline
 In order to collect the data, I ran my script at various times each day, and saved each data pull from the API with a time stamp, then periodically pulled batches of the raw data.
 
-![DataPipeline](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/data_pipeline.png)
+![DataPipeline](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/data_pipeline.png)     
 
 ### Exploratory Data Analysis
 #### Positive Reception
-![DataClasses](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/class_frequencies.png)
+![DataClasses](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/class_frequencies.png)     
+
  Positive Class (1.0): 6322
  Neutral Class (0.0): 5696
  Negative Class (-1.0): 1628          
@@ -37,14 +38,14 @@ Among the negative comments we observe frequent instances of the words "air", "p
 ![NegativeWords](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/neg_words.png)
 
 ### Models
-1. Niave Bayes
+#### 1. Niave Bayes
 I used GaussianNB from sklearn to to make predictions about polarity. Since there was a class imbalance, I ran the model with and without SMOTE, and with cross validation and chose from the best scores.      
 ![NB](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/NB_SMOTE_TABLE.png)    
 
 ![NB](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/NB_SMOTE_ROC.png)    
 
 
-2. Support Vector Classifier
+#### 2. Support Vector Classifier
 I also used sklearn.SVM SVC to see if I could improve my results. I fit the model with hyper parameters using GridSearchCV. The performance of the model was impressive, however I would like to further investigate if overfitting is occuring.    
 ![SVC](https://github.com/xinegan88/AppleM1OpinionMining/blob/main/images/SVC_TABLE_ROC.png)    
 
