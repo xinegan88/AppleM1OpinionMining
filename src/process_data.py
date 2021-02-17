@@ -139,11 +139,13 @@ def process_data(df: pd.DataFrame, tokenizer: str, stopwords_list: list,
     print('-- Removing hashtags, web addresses, and mentions...')
     print('-- Removing any code tags...')
     print('-- Joining tokens for further processing...')
-    df = pd.DataFrame(df.text)
-    df['text'] = df.text.apply(lambda x: str(x))
-    df['cleaned_text'] = df['text'].apply(lambda x: clean_text(x, tokenizer))
-    df['lens'] = df.cleaned_text.apply(lambda x: len(x))
+#     df['text'] = df['text'].apply(lambda x: str(x))
+    df['cleaned_text'] = df['text'].apply(lambda x: clean_text(str(x), tokenizer))
+    df['lens'] = df['cleaned_text'].apply(lambda x: len(x))
     df = df[df.lens > 0]
+    cols = ['text', 'cleaned_text']
+    drop_cols = [col for col in list(df.columns) if col not in cols]
+    df = df.drop(drop_cols, axis=1)
     
     print('\n[*] Labeling subjectivity...')
     print('-- Calculating subjectivity scores...')
@@ -169,7 +171,7 @@ def process_data(df: pd.DataFrame, tokenizer: str, stopwords_list: list,
     df['cleaned_text'] = df.cleaned_text.apply(lambda x: process_text(x, stopwords_list, lemmatizer))
     
     print('\n[*] Calculating text length...')
-    df['text_len'] = df.text.apply(lambda x: len(x.split(' ')))
+    df['text_len'] = df['text'].apply(lambda x: len(x.split(' ')))
     
     print('\n[*] Applying POS tags...')
     print('-- Obtaining POS tags...')
@@ -189,10 +191,12 @@ def batch_and_process_data(platform: str) -> (pd.DataFrame):
     general_functions.create_banner('Preprocess Data')
     
     ignore = ['.DS_Store']
-    t_source_dir = '/Users/christineegan/AppleM1SentimentAnalysis/data/tweet_data/raw_data/'
-    t_target_dir = '/Users/christineegan/AppleM1SentimentAnalysis/data/tweet_data/labeled_data/'
-    r_source_dir = '/Users/christineegan/AppleM1SentimentAnalysis/data/reddit_data/raw_data/session_data/'
-    r_target_dir = '/Users/christineegan/AppleM1SentimentAnalysis/data/reddit_data/labeled_data/'
+    source = '/Users/christineegan/AppleM1SentimentAnalysis/data/'
+    time_stamp = str(datetime.date(datetime.now()))+'/'
+    t_source_dir = source + 'tweet_data/raw_data/' + time_stamp
+    t_target_dir = source + 'tweet_data/labeled_data/model_data/'
+    r_source_dir = source + 'reddit_data/raw_data/session_data/' + time_stamp
+    r_target_dir = source + 'data/reddit_data/labeled_data/model_data/'
 
     if platform == 'Twitter':
         print('[*] Retrieving session data from source directory...\n')
@@ -215,10 +219,13 @@ def batch_and_process_data(platform: str) -> (pd.DataFrame):
         
     print('\n[*] Preprocessing batch:', batch_name)
     data = process_data(raw_data, tokenizer, stopwords_list, lemmatizer, analyzer)
+    
+    date_dir = general_functions.date_directory(target_dir)
+    print(date_dir)
 
     file_name = ' '.join(str(datetime.now()).split(' '))[0:19]
     file_name = file_name.replace(':', '_').replace(' ','_')+'.csv'
-    csv_name = target_dir + file_name
+    csv_name = date_dir + file_name 
     
     print('\n[*] Saving processed results to ', csv_name)
     data.to_csv(csv_name, index=False)

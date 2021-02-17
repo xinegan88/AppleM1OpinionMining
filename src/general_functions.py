@@ -17,7 +17,7 @@ import twitter_api
 import reddit_api
 
 
-def create_banner(title):
+def create_banner(title: str) -> (None):
     '''Accepts title(str) and displays a simple banner for the 
     application using the provided title.
     '''
@@ -26,12 +26,27 @@ def create_banner(title):
     print(title)
     print('-'*100)
     
-    pass
+    return
+
+
+def date_directory(target_dir: str) -> (str):
+    '''Checks the target directory to see if the date stamped directory exists
+    for the current date. If no directory exists, it is created and the name of
+    the new directory is returned.
+    '''
+    dir = os.path.join(target_dir+str(datetime.date(datetime.now())))
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+    return str(dir+'/')
             
 
 def execute_schedule(platform: str) -> (None):
     '''For a given platform, the user is prompted to set a timer to make
-    API calls.
+    API calls. The user enters a start time in 24-hour time. The default
+    is that the schedule executes the script in 15-minute intervals, with
+    sixty seconds of rest between each query. Each interval is followed by
+    a five minute break, the the script is executed again until the user
+    specified end time.
     '''
     create_banner('Execute Schedule')
     print('Don\'t forget to mind your API call limits.')

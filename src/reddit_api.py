@@ -23,24 +23,32 @@ reddit = praw.Reddit(
      user_agent=user_agent)
 
 
-def submissions_params():
+def submissions_params() -> (str, int, list):
+    '''Prompts the user to enter a search term, a result limit and 
+    a list of subreddits to provide submission parameters for a 
+    Reddit API call.
+    '''
     
     print('\nEnter a search term.')
     term = input()
+    
     print('\nEnter a limit.')
     limit = input()
+    
     print('\nEnter a list of subreddits seperated by commas.')
     subreds = input()
-#     print(subreds)
-#     print(type(subreds))
     subreds = subreds.split(', ')
-#     print(type(subreds))
-#     print(subreds)
+
     
     return term, limit, subreds
 
 
-def reddit_query_summary(term, limit, subreds):
+def reddit_query_summary(term: str, limit: int, 
+                         subred: str) -> (str, int, list):
+    '''Accepts a search term, result limit and list of subreddits and 
+    constructs a query summary so the user can correct any mistakes before
+    passing the selections along to the final query parameters.
+    '''
 
     print('')
     general_functions.create_banner('Summary of Query')
@@ -73,12 +81,18 @@ def reddit_query_summary(term, limit, subreds):
         
         return term, limit, subreds
     
-    
-def make_reddit_query(term, limit, subred):
+
+def make_reddit_query(term: str, limit: int, 
+                      subred: str) -> (pd.DataFrame):
+    '''Makes Reddit API calls by constructing a query for the subreddit 
+    indicated. It limits the reults to the limit indicated and the term
+    indicated. The result of each API call is stored in a pd.DataFrame. 
+    '''
 
     sub_list =[]
     print('\n[*] Searching for [', term, '] in [r/', subred, ']...' , sep='')
-    for submission in reddit.subreddit(subred).search(term, sort='comments', limit=int(limit)):
+    for submission in reddit.subreddit(subred).search(term, 
+                         sort='comments', limit=int(limit)):
         subs = []
         sub = {}
         sub['title'] = submission.title
@@ -123,18 +137,27 @@ def make_reddit_query(term, limit, subred):
     return df
 
 
-def retrieve_submissions(term, limit, subreds):
+def retrieve_submissions(term: str, limit: int, 
+                      subreds: str) -> (None):
+    '''Accepts the user selections for term, limit, and subreds. A 
+    destination for the results retrieved is established. The list of
+    subreddits is iterated over and queried for the selected term, and
+    limited to the provided limit. The result of each subreddit's query
+    is saved in a time stamped file in the provided directory. All of
+    the files are cocatenated into a batch and saved as a time stamped
+    session file.'''
     
-    results = pd.DataFrame()
-    directory = '~/AppleM1SentimentAnalysis/data/reddit_data/raw_data/subred_data/'
-    filename = ' '.join(str(datetime.now()).split(' '))[0:19].replace(':', '_').replace(' ','_')+'.csv'
-    csv_name = directory + filename
+    target_dir = '/Users/christineegan/AppleM1SentimentAnalysis/data/reddit_data/session_data/'
+    date_dir = general_functions.date_directory(target_dir)
+    file_name = ' '.join(str(datetime.now()).split(' '))[0:19]
+    file_name = file_name.replace(':', '_').replace(' ','_')+'.csv'
+    csv_name = date_dir + file_name
     
     for subred in subreds:
         print('\n[*] Retrieving data from r/' + subred)
         subred_df = make_reddit_query(term, limit, subred)
         
         print('\n[*] Saving results to ', csv_name)
-        subred_df.to_csv(subred + ' ' + filename)
+        subred_df.to_csv(csv_name)
     
     return

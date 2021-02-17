@@ -26,7 +26,10 @@ def create_vocabulary(df: pd.DataFrame) -> (list):
 
 
 def get_glove_vectors(total_vocab: pd.DataFrame, file_name: str) -> (dict):
-    '''
+    '''Navigates to the provided GLOVE file, opens it, and retrieves the
+    word vectors for each word in the provided vocabulary pd.DataFrame.
+    Each word and it's GLOVE vector are stored as a key-value pair in a 
+    a dictionary.
     '''
     glove = {}
     with open(file_name, 'rb') as f:
@@ -40,14 +43,24 @@ def get_glove_vectors(total_vocab: pd.DataFrame, file_name: str) -> (dict):
     return glove
 
 
-def get_embedding(vectors: float, word: str) -> (list):
-    '''
+def get_embedding(vectors: list, word: str) -> (list):
+    '''Accepts a list of words and their GLOVE vectors as tuples, and 
+    a word and returns a vector for the pair the matches the word.
     '''
     return [i[1] for i in vectors if i[0] == word]
 
 
-def retrieve_glove_embeddings(model_data: pd.DataFrame) -> (pd.DataFrame):
-    '''
+def retrieve_glove_embeddings(model_data: pd.DataFrame, date_dir: str) -> (pd.DataFrame):
+    '''Creates a vocabulary for the provided model data, then it imports 
+    GLOVE vectors for the provided vocabulary. Next it tags each doc
+    in the cleaned text data. Then, it initializes a Doc2Vec model and
+    infers the vectors fo each word in the cleaned text. Finally, the
+    words and vectors are zipped together, and the column for each word
+    in the vocabulary is populated by the vector for that word in the
+    rows in which the word is located within the cleaned text. Then, the 
+    unneccessary features for the model data are dropped and and a time-
+    stamped batch name is established. The vectorized model data is then
+    saved to the designated directory for that batch. 
     '''
     general_functions.create_banner('Vectorize Text with Doc2Vec')
 
@@ -76,13 +89,10 @@ def retrieve_glove_embeddings(model_data: pd.DataFrame) -> (pd.DataFrame):
         data[word] = data[word].apply(lambda x: list(zip(x[0], x[1])))
         data[word] = data[word].apply(lambda x: get_embedding(x, word))
         data[word] = data[word].apply(lambda x: x[0] if len(x) > 0 else 0)
-    
-    if 'user' in list(data.columns):
-        data = data.drop(['user', 'text', 'cleaned_text', 'text_len', 'pos_tags',
-                          'vex', 'cleaned_text_new', 'word', 'frequency'], axis=1)
-    else:
-        data = data.drop(['text', 'cleaned_text', 'text_len', 'pos_tags', 'vex',
-                         'cleaned_text_new', 'word', 'frequency'], axis=1)
+
+    data = data.drop(['text', 'cleaned_text', 'text_len', 'pos_tags', 'vex',
+                      'cleaned_text_new', 'word', 'frequency'], axis=1)
+        
 
     print('\n[*] Preparing data for model...')
     cols = [i for i in data.columns if i.isalpha()]
@@ -90,8 +100,9 @@ def retrieve_glove_embeddings(model_data: pd.DataFrame) -> (pd.DataFrame):
     
     batch_name = ' '.join(str(datetime.now()).split(' '))[0:19]
     batch_name = batch_name.replace(':', '_').replace(' ','_')+'.csv' 
+    file_name = date_dir + batch_name
     
-    data.to_csv('/Users/christineegan/AppleM1SentimentAnalysis/data/combined_data/model_data/'+ batch_name, index=False)
-    print('[*] Saving data to /Users/christineegan/AppleM1SentimentAnalysis/data/combined_data/model_data/'+ batch_name)
+    data.to_csv(file_name, index=False)
+    print('[*] Saving data to', file_name)
     
     return data

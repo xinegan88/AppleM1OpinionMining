@@ -17,12 +17,12 @@ from datetime import datetime
 import general_functions
 
 
-def tweet_params():
+def tweet_params() -> (str, str, int):
     '''A script that collects user input to generate parameters for the 
-    Twitter API Recent Search endpoint. User will enter search query (q), 
-    result type (result_type), langauge (lang), and number of results (count). 
-    Will process and return the parameters: q, result_type, and count. '''
-    
+    Twitter API Recent Search endpoint. User will enter search query, 
+    result type, and number of results. Specified params are passed on
+    to created a query summary.
+    '''
     print('\nEnter a search term.')
     term = input()
     term = term.replace(' ', '+').lower()
@@ -50,12 +50,9 @@ def tweet_params():
     return term, result_type, count
 
 
-def make_twython_query(term, result_type, count):
-    '''Accepts argument q (search term(s), str), result_type: (
-    'popular', 'recent', 'mixed'), count (number of results), 
-    and structures a Twitter API query. Returns a dictionary with
-    the query.'''
-    
+def make_twython_query(term: str, result_type: str,
+                       count: int) -> (dict):
+    '''Accepts user paramaters and returns a Twython Query.'''
     query = {'q': term,
              'result_type': result_type,
              'lang': 'en',
@@ -65,11 +62,11 @@ def make_twython_query(term, result_type, count):
     return query
 
 
-def tweet_query_summary(term, result_type, count):
-    '''Accepts Twitter API Recent Search parameters: q (string), 
-    result_type (string), lang (string), and count (int). Prints
-    a summary of these parameters. Confirms with the user that the
-    query is acceptable. If confirmed, query is returned. If not
+def tweet_query_summary(term: str, result_type: str,
+                       count: int) -> (None):
+    '''Accepts Twitter API Recent Search parameters,. Prints a summary of
+    these parameters. Confirms with the user that the query is acceptable.
+    If confirmed, query is passed along to create the final query. If not
     confirmed, user is prompted to re-enter parameters.
     '''
     print('')
@@ -104,10 +101,12 @@ def tweet_query_summary(term, result_type, count):
     return
 
 
-def twython_results(api_key, api_key_secret, query):
-    '''Accepts the arguments 'api_key' and 'api_key_secret' and a 
-    query (as a dictionary) and returns a pd.Dataframe containing
-    tweets that match the query parameters.'''
+def twython_results(api_key: str, api_key_secret: str, 
+                    query: dict) -> (pd.DataFrame):
+    '''Accepts users credentials and approved query, executes a Twitter
+    search for the query, and returns the results in a pd.DataFrame that
+    is filtered for the designated features.
+    '''
 
     print('\n[*] Obtaining authorization...')
     twitter = Twython(api_key, api_key_secret)
@@ -130,17 +129,18 @@ def twython_results(api_key, api_key_secret, query):
     return results
 
 
-def retrieve_tweets(query):
-    '''Executes the tweet params function to construct
-    a query. Retrieves API keys from .env file. Then
-    uses that query to retrieve search reults from the
-    Twitter API recent search endpoint. Executes generate_
-    csv() function to save results.'''
+def retrieve_tweets(query: dict) -> (None):
+    '''Establishes a time stamped filename and directory to store
+    retults. Provided credentials are retrieved and provided to
+    execute the API calls for the query. A csv of the results is
+    saved in the established file name.
+    '''
     
-    directory = '~/AppleM1SentimentAnalysis/data/tweet_data/raw_data/'
+    target_dir = '/Users/christineegan/AppleM1SentimentAnalysis/data/tweet_data/raw_data/'
+    date_dir = general_functions.date_directory(target_dir)
     file_name = ' '.join(str(datetime.now()).split(' '))[0:19]
     file_name = file_name.replace(':', '_').replace(' ','_')+'.csv'
-    csv_name = directory + file_name
+    csv_name = date_dir + file_name
 
     print('\n[*] Accessing credentials...')
     api_key = os.getenv('twitter_api_key')
@@ -151,7 +151,7 @@ def retrieve_tweets(query):
     print('\n[*] Saving results to ', csv_name)
     results.to_csv(csv_name, index=False)
 
-    pass
+    return
 
 
 def retrieve_more_tweets() -> (None):

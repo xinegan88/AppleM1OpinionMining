@@ -216,18 +216,20 @@ def pos_tag_frequency_by_sentiment(pos_df: pd.DataFrame, neu_df: pd.DataFrame,
     neu_counts = pos_tag_counts(neu_df)
     neg_counts = pos_tag_counts(neg_df)
     
-    pos_counts = pos_counts.rename(columns={'tag': 'pos_tag', 'frequency': 'pos_freq', 'percent': 'pos_percent'})
-    neu_counts = neu_counts.rename(columns={'tag': 'neu_tag', 'frequency': 'neu_freq', 'percent': 'neu_percent'})
-    neg_counts = neg_counts.rename(columns={'tag': 'neg_tag', 'frequency': 'neg_freq', 'percent': 'neg_percent'})
+    pos_counts = pos_counts.rename(columns={'tag': 'pos_tag', 
+                                            'frequency': 'pos_freq', 
+                                            'percent': 'pos_percent'}
+                                              )
+    neu_counts = neu_counts.rename(columns={'tag': 'neu_tag',
+                                            'frequency': 'neu_freq',
+                                            'percent': 'neu_percent'}
+                                              )
+    neg_counts = neg_counts.rename(columns={'tag': 'neg_tag', 
+                                            'frequency': 'neg_freq', 
+                                            'percent': 'neg_percent'}
+                                              )
     
     all_counts = pd.concat([pos_counts, neu_counts, neg_counts], axis=1)
-    
-#     print('Positive Tag Counts')
-#     display(pos_counts)
-#     print('\nNeutral Tag Counts')
-#     display(neu_counts)
-#     print('\nNegative Tag Counts')
-#     display(neg_counts)
     
     pos_list = list(pos_counts['pos_tag'])
     neu_list = list(neu_counts['neu_tag'])

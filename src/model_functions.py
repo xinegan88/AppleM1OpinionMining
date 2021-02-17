@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from datetime import datetime
+
 import sklearn
 import sklearn.model_selection as model_selection
 import sklearn.metrics as metrics
@@ -14,6 +16,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
 from word_vector_functions import retrieve_glove_embeddings
+import general_functions
 
 
 def create_banner(title: str) -> (None):
@@ -28,21 +31,33 @@ def create_banner(title: str) -> (None):
     return
 
 
-def import_model_data(filename: str) -> (pd.DataFrame):
+def import_model_data(file_name: str) -> (pd.DataFrame):
     '''Accepts a csv file as input, reads it in as a pd.DataFrame, and
     divides the data into X, y. Returns X, y.
     '''
+    source = '/Users/christineegan/AppleM1SentimentAnalysis/data'
+    if 'tweet' in file_name:
+        target_dir = source + '/tweet_data/labeled_data/model_data/'
+        date_dir = general_functions.date_directory(target_dir)
+    else:
+        target_dir = source + '/reddit_data/labeled_data/model_data/'
+        date_dir = general_functions.date_directory(target_dir)
+        
     print('\n[*] Importing model data...')
-    model_data = pd.read_csv(filename)
+    model_data = pd.read_csv(file_name)
     model_data = model_data[model_data.polarity != 0]
-    X = model_data.drop(['polarity'], axis=1)
-    y = model_data.polarity
+    vectorized_model_data = retrieve_glove_embeddings(model_data, date_dir)
+    X = vectorized_model_data.drop(['polarity'], axis=1)
+    y = vectorized_model_data.polarity
 
-    return model_data, X, y
+    return vectorized_model_data, X, y
 
 
 def check_class_imbalance(data: pd.Series) -> (bool):
-    '''
+    ''' Accepts a pd.Series and retrieves the value counts and stores them 
+    in a pd.DataFrame. The total frequency of each value is then calculated
+    and stored as a percent. If the percent of all the values do not match
+    a class imbalance is indicated.
     '''
     create_banner('Class Distribution')
     print('[*] Reviewing target data...')
@@ -55,7 +70,12 @@ def check_class_imbalance(data: pd.Series) -> (bool):
 
     answers = ['Y','N']
     if len(np.unique(val_counts.frequency)) != 1:
-        use_smote = True
+        print('A class imbalance was detected. Would you like to use SMOTE?', answers)
+        answer = input()
+        if answer.upper() == answers[0]:
+            use_smote = True
+        else:
+            use_smote = False
 
     return use_smote
 
@@ -222,21 +242,26 @@ def model_results(clfs: list, X: pd.DataFrame, y: pd.Series,
         clf_scores, clf_scores_mean = run_cross_val_model(clf, X, y, cv)
         plot_my_cross_val_roc_curve(clf, X, y, cv, use_smote)
         
-#     create_banner('Model Scores')
-#     print('\n[*] Calculating model scores...')
-#     model_scores = pd.concat([model_scores, clf_scores_mean], axis=0)
-#     display(model_scores)
+    create_banner('Model Scores')
+    print('\n[*] Calculating model scores...')
+    model_scores = pd.concat([clf_scores, clf_scores_mean], axis=0)
+    display(model_scores)
             
     return
 
 
 def execute_models() -> (None):
-    '''
+    '''Model data is imported from the model data directory. The user is
+    prompted to choose a model(s) and enter a target feature. The data is
+    checked for a class imbalance and the user is prompted to choose the
+    SMOTE preference. The model data is then split into X, y and is passed
+    along with the user entered parameters to construct the final models.
+    
     '''
     create_banner('Deploy a Model')
     print('Enter a file name.')
     file_name = input()
-    vectorized_data = import_model_data(file_name)
+    vectorized_data, X, y = import_model_data(file_name)
 
     print('\n Choose a model: ')
     model_types = {'1': 'Logistic Regression', '2': 'GaussianNB', '3': 'SVC'}
@@ -262,14 +287,7 @@ def execute_models() -> (None):
     for model in model_choices:
         models.append(model_types[model])
     
-    print('\nEnter you target (y) feature.')
-    target = input()
-    
-    while target not in list(vectorized_data.columns):
-        print('Input not recognized, please try again.')
-        target = input()
-        
-    use_smote = check_class_imbalance(vectorized_data[target])
+    use_smote = check_class_imbalance(y)
     
     create_banner('Model Results')
     X = vectorized_data.drop('polarity', axis=1)
